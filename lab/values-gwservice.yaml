@@ -1,0 +1,34 @@
+name: gwservice
+
+image:
+  repository: freethinking04/gateway-service
+  pullPolicy: Always
+  tag: "latest"
+
+
+
+containerPort: 8080
+
+service:
+  type: NodePort
+  port: 8080
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+config:
+  OTEL_TRACES_ENDPOINT: "http://my-jaeger.monitoring.svc.cluster.local:4318/v1/traces"
